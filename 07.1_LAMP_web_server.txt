@@ -1,0 +1,167 @@
+
+
+1. Install the LAMP Web Server.** <br>
+
+a. Install Apache 2** <br>
+  Step 1: Update and Upgrade the apt tool to ensure we are working with the latest and greatest. <br>
+         ***sudo apt update***  <br>
+  Step 2: Install Apache and select Y when prompted. <br>
+        ***sudo apt install apache2*** <br>
+  Step 3:  Now that we have installed Apache we have to start the service. <br>
+        ***systemctl start apache2*** <br>
+  Step 4: Enabling Apache will automatically start the web server whenever the server is turned on. <br>
+        ***systemctl enable apache2*** <br>
+  Step 5: Verify Apache by visiting the server’shostname; you’ll see Apache’s default page. <br>
+         ***https://localhost*** <br>
+  Step 6: permissions to the /var/www/html folder <br>
+        ***sudo gpasswd -a usnername www-data*** <br>
+        ***sudo chown -R www-data:www-data /var/www/html*** <br>
+        ***sudo chmod -R g+rwx /var/www/html*** <br>
+  <br>
+  <br>
+
+
+b. Install and Enable PHP**  <br>
+  Step 1: install PHP <br>
+     ***apt install php libapache2-mod-php php-mysql*** <br>
+     ***php --version*** <br>
+   Step 2: check that PHP is installed correctly <br>
+     ***sudo vi /var/www/html/phpinfo.php***  <br>
+     add ***\<?php phpinfo(); ?\>*** <br>
+    change the permissions and ownership of the file <br>
+    ***sudo chown www-data:www-data /var/www/html/phpinfo.php*** <br>
+    ***sudo chmod +x /var/www/html/phpinfo.php*** <br>
+    Open a web browser, enter ***http://localhost/phpinfo.php*** <br>
+  <br>
+  <br>
+
+
+c. Install MySQL**  <br>
+   Step 1: Installing MySQL <br>
+      ***sudo apt update*** <br>
+      ***sudo apt install mysql-server*** <br>
+   Step 2: Configuring MySQL <br>
+      ***sudo mysql_secure_installation*** <br>
+   Step 3: Adjusting User Authentication and Privileges <br>
+      ***sudo mysql*** <br>
+      ***SELECT user,authentication_string,plugin,host FROM mysql.user;*** <br>
+      ***ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';*** <br>
+      ***FLUSH PRIVILEGES;***<br>
+      ***SELECT user,authentication_string,plugin,host FROM mysql.user;***<br>
+      ***exit***<br>
+    <br>
+    connect to MySQL with a dedicated user <br>
+      ***mysql -u root -p*** <br>
+      ***CREATE USER 'username##'@'localhost' IDENTIFIED BY 'password';*** <br>
+      ***GRANT ALL PRIVILEGES ON *.* TO 'username##'@'localhost' WITH GRANT OPTION;*** <br>
+      ***exit*** <br>
+   Step 4: Testing MySQL <br>
+    ***systemctl status mysql.service*** <br>
+    ***sudo mysqladmin -p -u root version*** <br>
+  <br>
+  <br>
+
+
+d. install MySQL Workbench**  <br>
+    ***sudo apt install mysql-workbench***<br>
+  <br>
+  <br>
+
+
+e. Install PHPMyAdmin**  <br>
+  ***sudo apt install phpmyadmin***<br>
+   <br>
+  ***sudo ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-available/phpmyadmin.conf***<br>
+  ***sudo a2enconf phpmyadmin.conf***<br>
+  ***sudo systemctl reload apache2.service***<br>
+  Test ***http://localhost/phpmyadmin***<br>
+  <br>
+  <br>
+
+
+
+
+mysql -u root -p
+CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'LongGeneDB1@';
+
+
+
+Installing Additional PHP Extensions 
+     ***sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip*** <br>
+
+restart Apache to load these new extensions 
+sudo systemctl restart apache2
+
+Step 3 – Adjusting Apache’s Configuration to Allow for .htaccess Overrides and Rewrites
+
+sudo vi /etc/apache2/sites-available/wordpress.conf
+<Directory /var/www/wordpress/>
+    AllowOverride All
+</Directory>
+
+
+Enabling the Rewrite Module
+sudo a2enmod rewrite
+
+Enabling the Changes
+sudo apache2ctl configtest
+
+Restart Apache to implement the changes:
+sudo systemctl restart apache2
+
+
+Step 4 – Downloading WordPress
+cd /media/Project/03_LongGeneDB/tmp
+curl -O https://wordpress.org/latest.tar.gz
+
+tar xzvf latest.tar.gz
+touch wordpress/.htaccess
+cp wordpress/wp-config-sample.php wordpress/wp-config.php
+
+mkdir wordpress/wp-content/upgrade
+
+sudo cp -a wordpress/. /var/www/wordpress
+
+
+Step 5 – Configuring the WordPress Directory
+sudo chown -R www-data:www-data /var/www/wordpress
+sudo find /var/www/wordpress/ -type d -exec chmod 750 {} \;
+sudo find /var/www/wordpress/ -type f -exec chmod 640 {} \;
+
+curl -s https://api.wordpress.org/secret-key/1.1/salt/
+
+define('AUTH_KEY',         't^yc5.eK1:sJMxRj1R#*aUdve4~<-]IH|vf)=KF%~2Dxs#Qk+H_<^$+HCXY+d`#D');
+define('SECURE_AUTH_KEY',  'pF&}$h7*#4Y+-||@KB4.i4n^Bh8l7-Nkgu[24(nW&Sc(JNSo_T-a$U/-e+0PmWre');
+define('LOGGED_IN_KEY',    'VXlW47Oo/u-KjB4$9=Hc78bk[[@l#z$Q<]4*CuB---Ewk>KE?z+xBMn<YW92$WFC');
+define('NONCE_KEY',        'h$+,kp*P3jf3>P#=)omr^63}K1Rudh=b>R?/0-mmn1,Gkun~`&b1+zu#2va~]_]R');
+define('AUTH_SALT',        '1-Sy3CVL30eTB];J+Q]tkK/6!=;~JqBf7=vl9n.LIOyy${&6nEf8&T/yf$6k0 !)');
+define('SECURE_AUTH_SALT', '7aWD@a[P#ZR!6X1TaG4 u-`%bfh^JB6m66~Q@4Ch)d]wQZ8NZPs)#9!_}5zFg! x');
+define('LOGGED_IN_SALT',   '`-(%w03RQ)+;K^d-gDPS9g.2,M#NDhAa?l*[h/#CL%BF>czwlnmsQ*{` [+R?flW');
+define('NONCE_SALT',       'Q4+,MLXziX7JxxHM8/!DkY@y3k[5hFn8_-^}p-oIsGdu=.jkj|AzBq3U(N`Ya|j/');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE DATABASE longgenedb DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+GRANT ALL ON longgenedb.* TO 'longgenedbuser'@'localhost' IDENTIFIED BY 'LongGeneDB1@';
+
+

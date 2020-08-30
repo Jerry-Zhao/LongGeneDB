@@ -1,0 +1,252 @@
+
+
+1. Download raw data 2020/04/22
+ GSM938750 SRR501772/73/74/75/76/77 SRX150196 RenLab-HiC-cortex_replicate one
+ GSM938751 SRR501778/79/80/81       SRX150197 RenLab-HiC-cortex_replicate two
+
+ https://www.ebi.ac.uk/ena/browser/view/SRX150196
+ https://www.ebi.ac.uk/ena/browser/view/SRX150197
+
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep1_A SRR501772
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep1_B SRR501773
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep1_C SRR501774
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep1_D SRR501775
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep1_E SRR501776
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep1_F SRR501777
+
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep2_A SRR501778
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep2_B SRR501779
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep2_C SRR501780
+ fastq-dump.2.9.6 --split-3 -A RenLab_HiC_8w_cortex_rep2_D SRR501781
+
+ cat RenLab_HiC_8w_cortex_rep1_A_1.fastq RenLab_HiC_8w_cortex_rep1_B_1.fastq RenLab_HiC_8w_cortex_rep1_C_1.fastq
+     RenLab_HiC_8w_cortex_rep1_D_1.fastq RenLab_HiC_8w_cortex_rep1_E_1.fastq RenLab_HiC_8w_cortex_rep1_F_1.fastq 
+     >RenLab_HiC_8w_cortex_rep1_1.fastq
+
+ cat RenLab_HiC_8w_cortex_rep1_A_2.fastq RenLab_HiC_8w_cortex_rep1_B_2.fastq RenLab_HiC_8w_cortex_rep1_C_2.fastq
+     RenLab_HiC_8w_cortex_rep1_D_2.fastq RenLab_HiC_8w_cortex_rep1_E_2.fastq RenLab_HiC_8w_cortex_rep1_F_2.fastq
+     >RenLab_HiC_8w_cortex_rep1_2.fastq
+
+
+ cat RenLab_HiC_8w_cortex_rep2_A_1.fastq RenLab_HiC_8w_cortex_rep2_B_1.fastq RenLab_HiC_8w_cortex_rep2_C_1.fastq
+     RenLab_HiC_8w_cortex_rep2_D_1.fastq >RenLab_HiC_8w_cortex_rep2_1.fastq
+
+ cat RenLab_HiC_8w_cortex_rep2_A_2.fastq RenLab_HiC_8w_cortex_rep2_B_2.fastq RenLab_HiC_8w_cortex_rep2_C_2.fastq
+     RenLab_HiC_8w_cortex_rep2_D_2.fastq >RenLab_HiC_8w_cortex_rep2_2.fastq
+
+ rm RenLab_HiC_8w_cortex_rep1_A_1.fastq RenLab_HiC_8w_cortex_rep1_B_1.fastq RenLab_HiC_8w_cortex_rep1_C_1.fastq
+ rm RenLab_HiC_8w_cortex_rep1_D_1.fastq RenLab_HiC_8w_cortex_rep1_E_1.fastq RenLab_HiC_8w_cortex_rep1_F_1.fastq
+ rm RenLab_HiC_8w_cortex_rep1_A_2.fastq RenLab_HiC_8w_cortex_rep1_B_2.fastq RenLab_HiC_8w_cortex_rep1_C_2.fastq
+ rm RenLab_HiC_8w_cortex_rep1_D_2.fastq RenLab_HiC_8w_cortex_rep1_E_2.fastq RenLab_HiC_8w_cortex_rep1_F_2.fastq
+ rm RenLab_HiC_8w_cortex_rep2_A_1.fastq RenLab_HiC_8w_cortex_rep2_B_1.fastq RenLab_HiC_8w_cortex_rep2_C_1.fastq
+ rm RenLab_HiC_8w_cortex_rep2_D_1.fastq
+ rm RenLab_HiC_8w_cortex_rep2_A_2.fastq RenLab_HiC_8w_cortex_rep2_B_2.fastq RenLab_HiC_8w_cortex_rep2_C_2.fastq
+ rm RenLab_HiC_8w_cortex_rep2_D_2.fastq
+
+2. Homer analysis
+
+ # 2.1 Trimming FASTQ files from Hi-C experiments
+ # reads should be trimmed and aligned separately (do not perform paired-end alignment with HOMER). 
+ # First step for processing Hi-C FASTQ files is to remove sequences that might come from the proximity ligation of 
+ # other regions of the genome to the DNA fragment. These can complicate alignment since [together with the beginning 
+ # of the read] they do not represent a continuous genomic sequence. To improve mapping rates, it's best to trim the 
+ # sequences at the restriction site.  You can use whatever tool that you want to use for this, here we'll use homerTools (more info on homerTools):
+
+ # If using a restriction enzyme that produces different types of overhangs, like the 6-cutter HindIII, the fill 
+ # in step can create sequences that differ from the actual restriction site (AAGCTT becomes AAGCTAGCTT):
+ homerTools trim -3 AAGCTAGCTT -mis 0 -matchStart 20 -min 20 RenLab_HiC_8w_cortex_rep1_1.fastq
+ homerTools trim -3 AAGCTAGCTT -mis 0 -matchStart 20 -min 20 RenLab_HiC_8w_cortex_rep1_2.fastq 
+ homerTools trim -3 AAGCTAGCTT -mis 0 -matchStart 20 -min 20 RenLab_HiC_8w_cortex_rep2_1.fastq
+ homerTools trim -3 AAGCTAGCTT -mis 0 -matchStart 20 -min 20 RenLab_HiC_8w_cortex_rep2_2.fastq
+
+
+ # 2.2 Aligning Hi-C Experiments to the Reference Genome
+ # We recommend aligning the trimmed FASTQ reads with either bwa or bowtie2, although any modern short read aligner should work fine. 
+ # Be sure to align each read separately - do not align the reads in paired-end mode!
+ bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep1_1.fastq.trimmed -S RenLab_HiC_8w_cortex_rep1_1.sam 
+ bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep1_2.fastq.trimmed -S RenLab_HiC_8w_cortex_rep1_2.sam
+ bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep2_1.fastq.trimmed -S RenLab_HiC_8w_cortex_rep2_1.sam
+ bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep2_2.fastq.trimmed -S RenLab_HiC_8w_cortex_rep2_2.sam
+
+ # bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep1_1.fastq.trimmed -S RenLab_HiC_8w_cortex_rep1_1.sam
+ # reads processed: 401291092
+ # reads with at least one reported alignment: 367466852 (91.57%)
+ # reads that failed to align: 33824240 (8.43%)
+ # Reported 367466852 alignments
+
+ # bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep1_2.fastq.trimmed -S RenLab_HiC_8w_cortex_rep1_2.sam
+ # reads processed: 401291092
+ # reads with at least one reported alignment: 362454962 (90.32%)
+ # reads that failed to align: 38836130 (9.68%)
+ # Reported 362454962 alignments
+
+ # bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep2_1.fastq.trimmed -S RenLab_HiC_8w_cortex_rep2_1.sam
+ # reads processed: 294763499
+ # reads with at least one reported alignment: 270046125 (91.61%)
+ # reads that failed to align: 24717374 (8.39%)
+ # Reported 270046125 alignments
+
+ # bowtie -p 40 /media/Project/Genome/Bowtie/mm10 -q RenLab_HiC_8w_cortex_rep2_2.fastq.trimmed -S RenLab_HiC_8w_cortex_rep2_2.sam
+ # reads processed: 294763499
+ # reads with at least one reported alignment: 267914056 (90.89%)
+ # reads that failed to align: 26849443 (9.11%)
+ # Reported 267914056 alignments
+
+
+
+
+ # 2.3 Creating a Paired-End Tag Directory with HOMER
+ # To create a paired-end tag directory, you must run makeTagDirectory by entering the two halves of the mapped reads 
+ # separated by a comma, without spaces.
+
+ # HOMER matches reads between alignment files by matching the read names in the first column of the SAM file.
+ # The one option that I would highly recommend always adding to the makeTagDirectory command for Hi-C data is "-tbp 1", 
+ # which will only consider read pairs with the exact same ends once (i.e. remove all PCR duplicates). 
+
+ makeTagDirectory RenLab_HiC_8w_cortex RenLab_HiC_8w_cortex_rep1_1.sam,RenLab_HiC_8w_cortex_rep1_2.sam RenLab_HiC_8w_cortex_rep2_1.sam,RenLab_HiC_8w_cortex_rep2_2.sam -tbp 1 -genome mm10 -restrictionSite AAGCTT -both -removePEbg -removeSelfLigation -removeSpikes 10000 5 
+ 
+
+
+
+ # 2.4 Creating and Normalizing Hi-C interaction/contact Matrices
+ # The most basic way to represent Hi-C data is in matrix format, where the number of interactions can be reported between sets of regions. 
+ # Most Hi-C tasks in HOMER revolve around the analyzeHiC command.
+ 
+ # Hi-C is an unbiased assay of chromatin conformation, resulting in even read coverage across the entire genome.  This, coupled with the fact 
+ # that most Hi-C reads describe interactions at close linear distance along the chromosomes, results in relatively sparse read coverage for 
+ # interactions between individual restriction fragments separated by great distance.  This makes it difficult to find high-resolution interactions 
+ # across long distances.  
+
+ # To help describe how distal and/or inter-chromosomal regions co-localize, two general approaches are utilized:
+ # Increase the size of the regions [i.e. decrease the resolution] to boost the number of Hi-C reads used for interaction analysis.  
+ #    This is the most common and simplest technique used by most approaches (including HOMER).  It's much easier to identify significant 
+ #    inter-chromosomal interactions between regions that are 100kb in size than regions that are only 5kb in size (20x more reads to work with).
+ # Compare the profile of interactions regions participate in when comparing regions.  The best example of this is calculating the correlation 
+ #    coefficient of the interaction profiles between two regions.  The idea is that if two regions share interactions with several other regions, 
+ #    they are probably similar themselves (even if they do not have direct interaction evidence between them).  This forms the basis of the PCA 
+ #    analysis, and uses the transitive property to link regions.  If A interacts with C and D, and B interactions with C and D, perhaps A and B 
+ #    interact as well.
+
+
+ # resolution controls the sampling resolution, window controls the binning resolution
+ # "-res <#>" represents how frequent the genome is divided up into regions to analyze (i.e. the step-size of the analysis).  
+ # "-window <#>", represents how large the region is expanded when counting reads.  
+ # Usually the "-res <#>" should be smaller than the "-window <#>" - this will effectively analyze the data in overlapping window.  
+ # For example a res of 50000 and a window of 100000 would mean that HOMER will analyze the regions 0-50k, 50k-100k, 100k-150k etc., 
+ #     but at each region it will look at reads from a region the size of 100k, so it would look at reads from -25k-75k, 25k-125k, 
+ #     75k-175k, etc.  This means HOMER will analyze data with overlapping windows.  The principle advantage to this strategy is that 
+ #     you don't penalize features that span boundaries.
+
+ # Output Information Options (choose only one ):
+ # -raw       Outputs the raw interaction counts between the regions
+ # -coverageNorm (default)      Outputs normalized interaction counts assuming each region should have the same number of Hi-C interaction reads.  
+ #               This normalization essentially controls for the sequencing depth at each region. By default it will also normalize to the total 
+ #               sequencing depth and resolution size (more on that below). This normalization can be customized by using the options "-normTotal <#>" 
+ #               (controlling the total sequencing depth, default 1e9) and "-normArea <#>" (controlling the area in bp^2 used to normalize).
+ # -distNorm  Outputs the ratio of observed to expected interactions by assuming each region has an equal chance of interacting with every 
+ #            other region in the genome AND that regions are expected to interact depending on their linear distance along the chromosome.  
+ #            This attempts to take into account the "proximity ligation" effect, where adjacent regions are expected to have large numbers of 
+ #            interactions regardless of the specific 3D genomic structure in the region. If this option is used, HOMER will automatically generate 
+ #            a 'background' model that attempts to model this effect across the genome.
+ # -corr   Instead of outputting the matrix as is, the value of each cell is replaced with the Pearson's Correlation Coefficient between the row and 
+ #         column.  This can be useful as it adds transitive information to the problem.  Instead of just using the number of interaction that directly 
+ #         span between to loci, the correlation option will consider how each region interacts with all of the other loci too.  If they have similar 
+ #         interaction profiles, the correlation will be high (i.e. 1).  If "-logp" or "-expected" is used, those values are the ones that will be used 
+ #         for the correlation calculation.  The matrix must be symmetric for this option to work.
+
+ # Matrix Balancing    Using "-balance" will iteratively balance matrices to ensure the total interactions are the same for each region (i.e. row/column).
+ #                     This helps remove artifacts caused from differential Hi-C read coverage. However, regions with limited/low read coverage will have 
+ #                     "inflated" interaction counts - so be careful trying to interpreting interactions from these regions.
+
+ # chr18:69343356-69689079:ENSMUSG00000053477_Tcf4:protein_coding:+   positive_gene, +/- 100kb
+ # chr4:74242497-74405860:ENSMUSG00000028397_Kdm4c:protein_coding:+   negative_gene, +/- 100kb
+ analyzeHiC RenLab_HiC_8w_cortex -pos chr18:69243356-69789079 -res 2000 -window 10000 -balance -cpu 40 -corr -o ENSMUSG00000053477_Tcf4_HiC2k10k_corr.txt
+ analyzeHiC RenLab_HiC_8w_cortex -pos chr4:74142497-74505860 -res 2000 -window 10000 -balance -cpu 40 -corr -o ENSMUSG00000028397_Kdm4c_HiC2k10k_corr.txt
+
+ analyzeHiC RenLab_HiC_8w_cortex -pos chr18:69243356-69789079 -res 1000 -window 10000 -balance -cpu 40 -corr -o ENSMUSG00000053477_Tcf4_HiC1k10k_corr.txt
+ analyzeHiC RenLab_HiC_8w_cortex -pos chr4:74142497-74505860 -res 1000 -window 10000 -balance -cpu 40 -corr -o ENSMUSG00000028397_Kdm4c_HiC1k10k_corr.txt
+
+ analyzeHiC RenLab_HiC_8w_cortex -pos chr18:69243356-69789079 -res 2000 -window 10000 -balance -cpu 40 -o ENSMUSG00000053477_Tcf4_HiC2k10k.txt
+ analyzeHiC RenLab_HiC_8w_cortex -pos chr4:74142497-74505860 -res 2000 -window 10000 -balance -cpu 40 -o ENSMUSG00000028397_Kdm4c_HiC2k10k.txt
+
+
+ # R plot
+ library("pheatmap")
+ library("RColorBrewer") 
+ library("grid")
+ total <- read.table("ENSMUSG00000053477_Tcf4_HiC2k10k_corr.txt",header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])] 
+ png("ENSMUSG00000053477_Tcf4_HiC.png",width=800,height=800)
+  pheatmap(total2,scale="none",cluster_rows = FALSE,cluster_cols = FALSE,
+          color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20), breaks = seq(-0.3,0.3,length.out=20),
+          main = "Chromatin organization of ENSMUSG00000053477_Tcf4",fontsize = 15,border_color = NA,
+          labels_row=rep(c(" ","+/-100kb"), c(length(total2[1,])-1,1)), 
+          labels_col=rep("   ", length(total2[1,])-1))
+
+  ## grid.text location, the x and y percentage is to the whole plot area, not only to the heatmap-region
+  grid.text("TSS",x=0.87*51/length(total2[1,]),y=0.02, gp=gpar(col="black", fontsize=15),just="center")
+  grid.text("TES",x=0.87*(length(total2[1,])-51)/length(total2[1,]),y=0.02,gp=gpar(col="black", fontsize=15),just="center")
+
+  grid.text("TSS",x=0.88, y=0.95*(length(total2[1,])-51)/length(total2[1,])+0.02, gp=gpar(col="black", fontsize=15),just="center")
+  grid.text("TES",x=0.88, y=51/length(total2[1,])+0.01,gp=gpar(col="black", fontsize=15),just="center")
+ dev.off()
+
+
+ library("pheatmap")
+ library("RColorBrewer")
+ library("grid")
+ total <- read.table("ENSMUSG00000028397_Kdm4c_HiC2k10k_corr.txt",header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])]
+ png("ENSMUSG00000028397_Kdm4c_HiC.png",width=800,height=800)
+  pheatmap(total2,scale="none",cluster_rows = FALSE,cluster_cols = FALSE,
+          color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20), breaks = seq(-0.3,0.3,length.out=20),
+          main = "Chromatin organization of ENSMUSG00000028397_Kdm4c",fontsize = 15,border_color = NA,
+          labels_row=rep(c(" ","+/-100kb"), c(length(total2[1,])-1,1)),        
+          labels_col=rep("   ", length(total2[1,])-1))
+
+  ## grid.text location, the x and y percentage is to the whole plot area, not only to the heatmap-region
+  grid.text("TSS",x=0.87*51/length(total2[1,]),y=0.02, gp=gpar(col="black", fontsize=15),just="center")
+  grid.text("TES",x=0.87*(length(total2[1,])-51)/length(total2[1,]),y=0.02,gp=gpar(col="black", fontsize=15),just="center")
+
+  grid.text("TSS",x=0.88, y=0.95*(length(total2[1,])-51)/length(total2[1,])+0.02, gp=gpar(col="black", fontsize=15),just="center")
+  grid.text("TES",x=0.88, y=51/length(total2[1,])+0.01,gp=gpar(col="black", fontsize=15),just="center")
+ dev.off()
+
+
+
+
+
+# png("ENSMUSG00000028397_Kdm4c_HiC.png",width=800,height=800)
+#  pheatmap(total2,scale="none",cluster_rows = FALSE,cluster_cols = FALSE,
+#          color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20), breaks = seq(-0.3,0.3,length.out=20),
+#          main = "Chromatin organization at ENSMUSG00000053477_Tcf4",fontsize = 15,border_color = NA,
+#          labels_row=rep(c(" ","TSS"," ","TES"," "), c(50,1,length(total2[1,]-102),1,50)),
+#          labels_col=rep(c(" ","TSS"," ","TES"," "), c(50,1,length(total2[1,]-102),1,50)))
+# dev.off()
+
+
+
+
+
+
+
+
+
+ total <- read.table("ENSMUSG00000053477_Tcf4_HiC1k10k_corr.txt",header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])]
+ pheatmap(total2,cluster_rows = FALSE,cluster_cols=FALSE, color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20),breaks = seq(-0.3,0.3,length.out=20))
+
+ total <- read.table("ENSMUSG00000028397_Kdm4c_HiC1k10k_corr.txt",header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])]
+ pheatmap(total2,cluster_rows = FALSE,cluster_cols=FALSE, color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20),breaks = seq(-0.3,0.3,length.out=20))
+
+
+ total <- read.table("ENSMUSG00000053477_Tcf4_HiC2k10k.txt",header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])]
+ pheatmap(total2,cluster_rows = FALSE,cluster_cols=FALSE, color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20),breaks = seq(0,5,length.out=20))
+
+ total <- read.table("ENSMUSG00000028397_Kdm4c_HiC2k10k.txt",header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])]
+ pheatmap(total2,cluster_rows = FALSE,cluster_cols=FALSE, color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20),breaks = seq(0,5,length.out=20))
+
+

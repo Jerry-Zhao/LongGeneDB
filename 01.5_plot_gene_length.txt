@@ -1,0 +1,108 @@
+length1 <- read.table("Length/Long_Gene_list_orthologs_length.xls",header=T,row.names=1,sep="\t")
+length1[1:5,]
+dim(length1)
+
+for (i in 1:length(length1[,1]))
+{
+longest <- max(length1[i,1:7])
+
+png(paste("Length/png/",rownames(length1[i,]),"_Length.png", sep=""),width = 1200, height = 500)
+layout(matrix(1:2, ncol = 2), respect = FALSE)
+
+par(mar=c(0,0,0,0), bty="n")
+plot(1:10,1:10, xlim=c(0,400000), ylim=c(0,14),col="white",xaxt="n",yaxt="n",xlab="",ylab="")
+text(100000,13.5,paste("Human_",   length1[i,8], " (",as.integer(length1[i,1]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000,11.5,paste("Mouse_",   length1[i,9], " (",as.integer(length1[i,2]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000, 9.5,paste("Pig_",     length1[i,10]," (",as.integer(length1[i,3]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000, 7.5,paste("Chicken_", length1[i,11]," (",as.integer(length1[i,4]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000, 5.5,paste("Frog_",    length1[i,12]," (",as.integer(length1[i,5]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000, 3.5,paste("Fruitfly_",length1[i,13]," (",as.integer(length1[i,6]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000, 1.5,paste("Worm_",    length1[i,14]," (",as.integer(length1[i,7]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+segments(72000,13.5,90000,13.5,lwd=5)
+segments(72000,11.5,90000,11.5,lwd=5)
+segments(54000, 9.5,90000, 9.5,lwd=5)
+segments(36000, 7.5,90000, 7.5,lwd=5)
+segments(18000, 5.5,90000, 5.5,lwd=5)
+segments(    0, 3.5,90000, 3.5,lwd=5)
+segments(    0, 1.5,90000, 1.5,lwd=5)
+segments(54000,12.5,72000,12.5,lwd=5)
+segments(36000,  11,54000,  11,lwd=5)
+segments(18000, 9.3,36000, 9.3,lwd=5)
+segments(    0, 7.4,18000, 7.4,lwd=5)
+segments(72000,11.5,72000,13.5,lwd=5)
+segments(54000, 9.5,54000,12.5,lwd=5)
+segments(36000, 7.5,36000,  11,lwd=5)
+segments(18000, 5.5,18000, 9.3,lwd=5)
+segments(    0, 1.5,    0, 7.4,lwd=5)
+
+par(mar=c(0,0,0,0), bty="n")
+plot(1:10,1:10, xlim=c(0,longest), ylim=c(0,14),col="white",xaxt="n",yaxt="n",xlab="",ylab="")
+
+polygon(c(0,0,length1[i,1],length1[i,1]),c(13,14,14,13),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[i,2],length1[i,2]),c(11,12,12,11),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[i,3],length1[i,3]),c(9,10,10,9),  col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[i,4],length1[i,4]),c(7,8,8,7),    col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[i,5],length1[i,5]),c(5,6,6,5),    col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[i,6],length1[i,6]),c(3,4,4,3),    col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[i,7],length1[i,7]),c(1,2,2,1),    col=rgb(25,179,177,max=255))
+
+dev.off()
+}
+ 
+
+
+
+
+
+
+
+
+
+#### Test example
+
+longest <- max(length1[1,1:7])
+
+png(paste("Length/png/",rownames(length1[1,]),"_Length.png", sep=""),width = 1200, height = 500)
+layout(matrix(1:2, ncol = 2), respect = FALSE)
+
+par(mar=c(0,0,0,0), bty="n")
+plot(1:10,1:10, xlim=c(0,400000), ylim=c(0,14),col="white",xaxt="n",yaxt="n",xlab="",ylab="")
+text(100000,13.5,paste("Human_",length1[1,8], " (",as.integer(length1[1,1]/100)/10," kb)",   sep=""), cex=1.7, adj=0)
+text(100000,11.5,paste("Mouse_",length1[1,9], " (",as.integer(length1[1,2]/100)/10," kb)",   sep=""), cex=1.7, adj=0)
+text(100000, 9.5,paste("Pig_",length1[1,10]," (",as.integer(length1[1,3]/100)/10," kb)",     sep=""), cex=1.7, adj=0)
+text(100000, 7.5,paste("Chicken_",length1[1,11]," (",as.integer(length1[1,4]/100)/10," kb)", sep=""), cex=1.7, adj=0)
+text(100000, 5.5,paste("Frog_",length1[1,12]," (",as.integer(length1[1,5]/100)/10," kb)",    sep=""), cex=1.7, adj=0)
+text(100000, 3.5,paste("Fruitfly_",length1[1,13]," (",as.integer(length1[1,6]/100)/10," kb)",sep=""), cex=1.7, adj=0)
+text(100000, 1.5,paste("Worm_",length1[1,14]," (",as.integer(length1[1,7]/100)/10," kb)",    sep=""), cex=1.7, adj=0)
+segments(72000,13.5,90000,13.5,lwd=5)
+segments(72000,11.5,90000,11.5,lwd=5)
+segments(54000, 9.5,90000, 9.5,lwd=5)
+segments(36000, 7.5,90000, 7.5,lwd=5)
+segments(18000, 5.5,90000, 5.5,lwd=5)
+segments(    0, 3.5,90000, 3.5,lwd=5)
+segments(    0, 1.5,90000, 1.5,lwd=5)
+segments(54000,12.5,72000,12.5,lwd=5)
+segments(36000,  11,54000,  11,lwd=5)
+segments(18000, 9.3,36000, 9.3,lwd=5)
+segments(    0, 7.4,18000, 7.4,lwd=5)
+segments(72000,11.5,72000,13.5,lwd=5)
+segments(54000, 9.5,54000,12.5,lwd=5)
+segments(36000, 7.5,36000,  11,lwd=5)
+segments(18000, 5.5,18000, 9.3,lwd=5)
+segments(    0, 1.5,    0, 7.4,lwd=5)
+
+
+par(mar=c(0,0,0,0), bty="n")
+plot(1:10,1:10, xlim=c(0,longest), ylim=c(0,14),col="white",xaxt="n",yaxt="n",xlab="",ylab="")
+
+polygon(c(0,0,length1[1,1],length1[1,1]),c(13,14,14,13),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[1,2],length1[1,2]),c(11,12,12,11),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[1,3],length1[1,3]),c(9,10,10,9),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[1,4],length1[1,4]),c(7,8,8,7),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[1,5],length1[1,5]),c(5,6,6,5),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[1,6],length1[1,6]),c(3,4,4,3),col=rgb(25,179,177,max=255))
+polygon(c(0,0,length1[1,7],length1[1,7]),c(1,2,2,1),col=rgb(25,179,177,max=255))
+
+dev.off()
+
+

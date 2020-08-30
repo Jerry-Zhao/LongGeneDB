@@ -1,0 +1,103 @@
+## Conservation phyloP scores
+
+library(data.table)
+
+longgene <- as.matrix(read.table("Long_Gene_list_200kb.txt",header=FALSE, sep="\t"))
+longgene[1:5,]
+dim(longgene)
+#longgene <- longgene[1:500,]
+#longgene <- longgene[501:992,]
+#dim(longgene)
+
+for (i in 1:length(longgene[,1]))
+{
+ genename <- longgene[i,1]
+ ## genename <- "ENSMUSG00000029673_Auts2"
+
+ gene1 <- fread(paste("Epigenome/value/",genename,"_H3K4me1.txt", sep=""),header=FALSE,sep="\t")
+ gene <- gene1[,2:length(gene1[1,])]
+
+ ymax <- round(max(gene))+1
+
+ png(paste("Epigenome/png/H3K4me1/",genename,"_H3K4me1.png", sep=""),width = 1200, height = 800) 
+
+ par(mar=c(6,6,4,4))
+ layout(matrix(1:14, ncol = 1), heights = c(1.7,1,1,1,1,1,1,1,1,1,1,1,1,1.7), respect = FALSE)
+
+ par(mar = c(0, 5, 4.1, 2.1))
+ plot(1:length(gene[1,]), gene[1,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Bone Marrow", cex=2.5, adj=0)
+ title(paste("H3K4me1 profile in", genename ,"in 14 tissues"), cex.main = 2)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[2,]), gene[2,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Brown Adipose", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[3,]), gene[3,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Cerebellum", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[4,]), gene[4,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Cortex", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[5,]), gene[5,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Heart", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[6,]), gene[6,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Kidney", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[7,]), gene[7,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Liver", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[8,]), gene[8,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Lung", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[9,]), gene[9,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Olfactory Bulb", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[10,]), gene[10,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Placenta", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[11,]), gene[11,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Small Intestine", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[12,]), gene[12,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Spleen", cex=2.5, adj=0)
+
+ par(mar = c(0, 5, 0, 2.1))
+ plot(1:length(gene[13,]), gene[13,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM")
+ axis(1, c(10000,length(gene[1,])-10000), labels = FALSE)
+ text(20000, ymax, labels="Testis", cex=2.5, adj=0)
+
+ par(mar = c(4.1, 5, 0, 2.1))
+ plot(1:length(gene[14,]), gene[14,], type="h", ylim=c(0,ymax + 2), col=rgb(255,184,95,max=255), xaxt="n", cex.lab=2, cex.axis=2, ylab="RPM", xlab="")
+ axis(1, c(10000,length(gene[1,])-10000), labels = c("TSS","TES"), cex.axis=2)
+ text(20000, ymax, labels="Thymus", cex=2.5, adj=0)
+
+ dev.off()
+
+}
+
+
+

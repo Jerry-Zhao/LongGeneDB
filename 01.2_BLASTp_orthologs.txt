@@ -1,0 +1,42 @@
+## BLAST database /media/Project/Genome/BLAST
+# download protein sequences from Ensembl 99
+# ftp://ftp.ensembl.org/pub/release-99/fasta
+##  Caenorhabditis_elegans.WBcel235.pep.all.fa   
+##  Gallus_gallus.GRCg6a.pep.all.fa  
+##  Sus_scrofa.Sscrofa11.1.pep.all.fa
+##  Drosophila_melanogaster.BDGP6.28.pep.all.fa  
+##  Homo_sapiens.GRCh38.pep.all.fa   
+##  Xenopus_tropicalis.Xenopus_tropicalis_v9.1.pep.all.fa
+
+
+##  makeblastdb -in Homo_sapiens.GRCh38.pep.all.fa -parse_seqids -title Homo_sapiens -dbtype prot -out Homo_sapiens
+
+##  makeblastdb -in Sus_scrofa.Sscrofa11.1.pep.all.fa -parse_seqids -title Sus_scrofa -dbtype prot -out Sus_scrofa
+ 
+##  makeblastdb -in Gallus_gallus.GRCg6a.pep.all.fa -parse_seqids -title Gallus_gallus -dbtype prot -out Gallus_gallus
+ 
+##  makeblastdb -in Xenopus_tropicalis.Xenopus_tropicalis_v9.1.pep.all.fa -parse_seqids -title Xenopus_tropicalis -dbtype prot -out Xenopus_tropicalis
+ 
+##  makeblastdb -in Drosophila_melanogaster.BDGP6.28.pep.all.fa -parse_seqids -title Drosophila_melanogaster -dbtype prot -out Drosophila_melanogaster
+ 
+##  makeblastdb -in Caenorhabditis_elegans.WBcel235.pep.all.fa -parse_seqids -title Caenorhabditis_elegans -dbtype prot -out Caenorhabditis_elegans
+
+
+
+# BLASTp: protein blast
+
+blastp -db /media/Project/Genome/BLAST/Homo_sapiens -query Long_Gene_list_200kb_protein.fa -num_threads 35 -out Human_result.out
+
+blastp -db /media/Project/Genome/BLAST/Sus_scrofa -query Long_Gene_list_200kb_protein.fa -num_threads 35 -out Pig_result.out
+
+blastp -db /media/Project/Genome/BLAST/Gallus_gallus -query Long_Gene_list_200kb_protein.fa -num_threads 35 -out Chicken_result.out
+
+blastp -db /media/Project/Genome/BLAST/Xenopus_tropicalis -query Long_Gene_list_200kb_protein.fa -num_threads 35 -out Frog_result.out
+
+blastp -db /media/Project/Genome/BLAST/Drosophila_melanogaster -query Long_Gene_list_200kb_protein.fa -num_threads 35 -out Fruitfly_result.out
+
+blastp -db /media/Project/Genome/BLAST/Caenorhabditis_elegans -query Long_Gene_list_200kb_protein.fa -num_threads 35 -out Celegans_result.out
+
+
+
+

@@ -1,0 +1,33 @@
+
+# R plot
+library("pheatmap")
+library("RColorBrewer") 
+library("grid")
+
+#longgene <- as.matrix(read.table("Long_Gene_list_200kb_test.txt",header=FALSE, sep="\t"))
+longgene <- as.matrix(read.table("Long_Gene_list_200kb.txt",header=FALSE, sep="\t"))
+longgene[1:5,]
+
+for (i in 1:length(longgene[,1]))
+{
+ genename <- longgene[i,1]
+
+ total <- read.table(paste("/media/Project/HiC/LongGene/",genename,"_HiC2k10k_corr.txt", sep=""), header=T,row.names=1,sep="\t")
+ total2 <- total[,2:length(total[1,])] 
+
+ png(paste("HiC/png/",genename,"_HiC.png", sep=""), width=800,height=800)
+ pheatmap(total2,scale="none",cluster_rows = FALSE,cluster_cols = FALSE,
+          color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdYlBu")))(20), breaks = seq(-0.3,0.3,length.out=20),
+          main = paste("Chromatin organization of",genename),fontsize = 15,border_color = NA,
+          labels_row=rep(c(" ","+/-100kb"), c(length(total2[1,])-1,1)), 
+          labels_col=rep("   ", length(total2[1,])-1))
+
+ ## grid.text location, the x and y percentage is to the whole plot area, not only to the heatmap-region
+ grid.text("TSS",x=0.87*51/length(total2[1,]),y=0.02, gp=gpar(col="black", fontsize=15),just="center")
+ grid.text("TES",x=0.87*(length(total2[1,])-51)/length(total2[1,]),y=0.02,gp=gpar(col="black", fontsize=15),just="center")
+
+ grid.text("TSS",x=0.88, y=0.95*(length(total2[1,])-51)/length(total2[1,])+0.02, gp=gpar(col="black", fontsize=15),just="center")
+ grid.text("TES",x=0.88, y=51/length(total2[1,])+0.01,gp=gpar(col="black", fontsize=15),just="center")
+ dev.off()
+}
+

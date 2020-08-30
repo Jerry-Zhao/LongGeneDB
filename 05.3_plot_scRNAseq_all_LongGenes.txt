@@ -1,0 +1,45 @@
+
+library(Seurat)
+library(magrittr) ## %>% pipe operator
+library(dplyr)
+library(tidyr)
+library(Matrix)
+library("reshape2")
+library("gplots")
+library("ggplot2")
+packageVersion("Seurat") ## [1] ‘3.1.4’
+
+ptz.pc30 <- readRDS("scRNA/Jerry_PTZ_SeuratObject_AftertSNE_20181116.rds")
+
+plot_vln<-function(t,my.genes3) {
+  d <- as.matrix(t@data[intersect(my.genes3,rownames(t@data)),])
+  dd <- melt(d,id=row.names)
+  dd <- dd %>% dplyr::rename(gene=Var1,cell=Var2)
+  dd$tree.ident <- t@ident[dd$cell]
+  str(dd$tree.ident)
+  dd$gene <- factor(dd$gene,levels=intersect(my.genes3,rownames(t@data)))
+  ggplot(dd,aes(tree.ident,value,fill=tree.ident))+geom_violin(scale="width",trim=T,alpha=0.8,adjust=1)+facet_wrap(~gene,scales="free_y",
+     ncol=1,strip.position = "right") + theme(strip.background = element_blank(), strip.placement = "outside",axis.text.y=element_blank(),
+     axis.title.y=element_blank(),strip.text.y = element_text(colour = "red", angle = 360,size=20),legend.position="none",panel.grid=element_blank(), 
+     panel.border=element_blank())+theme(axis.text.x = element_text(angle = 45,hjust=1,vjust=1,size=rel(2)),legend.position="none") + xlab("")
+}
+
+
+longgene <- as.matrix(read.table("Long_Gene_list_200kb.txt",header=FALSE, sep="\t"))
+longgene[1:5,]
+
+for (i in 1:length(longgene[,1]))
+{
+ genename <- longgene[i,1]
+ genesymbol <- longgene[i,2]
+
+ png(paste("scRNA/png/",genename,"_ViolinPlot.png", sep=""),width = 1200, height = 600)
+ print(plot_vln(ptz.pc30,c(genesymbol,"Slc17a7","Gad1","Slc1a3")))
+ dev.off()
+}
+
+
+## rename multiple files
+# sudo apt-get install mmv
+# mmv '*scRNA_ViolinPlot.png' '#1ViolinPlot.png'
+

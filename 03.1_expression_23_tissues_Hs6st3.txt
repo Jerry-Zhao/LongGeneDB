@@ -1,0 +1,61 @@
+## Expression profiles in 23 tissues
+
+fpkm <- read.table("Expression/FPKM_merged_mENCODE_exonic_gene_Jerry.xls",header=T,row.names=1,sep="\t")
+fpkm[1:5,]
+
+#### Hs6st3
+gene1 <- fpkm["ENSMUSG00000053465_Hs6st3",]
+names(gene1) <- NULL
+data <- data.frame(Tissue=c("Adrenal_gland","Adrenal_gland","Cerebellum","Cerebellum","Colon","Colon","Cortex","Cortex","Duodenum","Duodenum",
+                   "Frontal_Cortex","Frontal_Cortex","Gonadal_FatPad","Gonadal_FatPad","Heart","Heart","Kidney","Kidney",
+                   "Large_intestine","Large_intestine","Liver","Liver","Lung","Lung","Mammary_gland","Mammary_gland","Ovary","Ovary",
+                   "Placenta","Placenta","Small_intestine","Small_intestine","Spleen","Spleen","Stomach","Stomach",
+                   "Subcutan_Adipose","Subcutan_Adipose","Testis","Testis","Thymus","Thymus","Urinary_Bladder","Urinary_Bladder"),
+                   FPKM=unlist(c(gene1)))
+data
+
+labels <- paste(c("Cortex","Frontal_Cortex","Cerebellum","Adrenal_gland","Colon","Duodenum",
+      "Gonadal_FatPad","Heart","Kidney","Large_intestine","Liver","Lung","Mammary_gland","Ovary","Placenta","Small_intestine",
+      "Spleen","Stomach","Subcutan_Adipose","Testis","Thymus","Urinary_Bladder"))
+
+ymax <- round((max(gene1)+5)/10)*10
+
+png("Expression/png/ENSMUSG00000053465_Hs6st3_expression_boxplot.png",width = 1200, height = 600) 
+par(mar=c(10, 4.7, 4.1, 2.1), cex.axis = 1.5, cex.lab=2)
+boxplot(data$FPKM~factor(data$Tissue,levels=labels), col=rgb(255,184,95,max=255),ylim=c(0,ymax),xlab="",ylab="Normalized mRNA levels (FPKM)",xaxt="n")
+axis(1, 1:22, labels = FALSE)
+text(x =  seq_along(labels), y = par("usr")[3] - (par("usr")[4] - par("usr")[3])/30, srt = 45, adj = 1, labels = labels, xpd = TRUE, cex=1.8)
+title("ENSMUSG00000053465_Hs6st3 mRNA levels in 22 tissues", cex.main = 2)
+dev.off()
+
+
+jpeg("Expression/jpeg/ENSMUSG00000053465_Hs6st3_expression_boxplot.jpeg",width = 1200, height = 600)
+par(mar=c(10, 4.7, 4.1, 2.1), cex.axis = 1.5, cex.lab=2)
+boxplot(data$FPKM~factor(data$Tissue,levels=labels), col=rgb(255,184,95,max=255),ylim=c(0,ymax),xlab="",ylab="Normalized mRNA levels (FPKM)",xaxt="n")
+axis(1, 1:22, labels = FALSE)
+text(x =  seq_along(labels), y = par("usr")[3] - (par("usr")[4] - par("usr")[3])/30, srt = 45, adj = 1, labels = labels, xpd = TRUE, cex=1.8)
+title("ENSMUSG00000053465_Hs6st3 mRNA levels in 22 tissues", cex.main = 2)
+dev.off()
+
+
+
+
+### pdf fonts in ubuntu is not correct 
+
+cairo_pdf("Expression/pdf/ENSMUSG00000053465_Hs6st3_expression_boxplot.pdf",width = 1200, height = 600, useDingbats=FALSE)
+
+mar.default <- c(5,4,4,2) + 0.1
+par(mar = mar.default + c(5, 1, 0, 0), cex.axis = 1.5, cex.lab=2)
+
+boxplot(data$FPKM~factor(data$Tissue,levels=labels), col=rgb(255,184,95,max=255),ylim=c(0,ymax),xlab="",ylab="Normalized mRNA levels (FPKM)",xaxt="n")
+axis(1, 1:22, labels = FALSE)
+text(x =  seq_along(labels), y = par("usr")[3] - (par("usr")[4] - par("usr")[3])/30, srt = 45, adj = 1, labels = labels, xpd = TRUE, cex=1.8)
+title("ENSMUSG00000053465_Hs6st3 mRNA levels in 22 tissues", cex.main = 2)
+dev.off()
+
+
+
+
+
+
+
